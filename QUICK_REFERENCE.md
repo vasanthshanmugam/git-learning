@@ -1,6 +1,6 @@
-# Git Quick Reference - Questions 1-3
+# Git Quick Reference - Questions 1-6
 
-This is a quick reference for the concepts covered in the first 3 questions.
+This is a quick reference for the concepts covered in the first 6 questions.
 
 ## Question 01: Three Areas in Git
 
@@ -163,6 +163,147 @@ git checkout main              # Return to branch (attached HEAD)
 2. **HEAD** = Where you are right now
 3. **Tracked** = Git knows about it
 4. **Untracked** = Git ignores it (until you `git add`)
+5. **git init** = Creates `.git` folder (the repository)
+6. **Default branch** = First branch created (master or main)
+7. **.git directory** = IS the repository (all your data)
+
+---
+
+## Question 04: What Does git init Do?
+
+### What It Creates
+```bash
+git init
+# Creates:
+.git/
+├── HEAD              # Points to current branch
+├── config            # Repository settings
+├── objects/          # Database (empty initially)
+├── refs/             # References (branches, tags)
+└── hooks/            # Automation scripts
+```
+
+### Key Commands
+```bash
+git init                    # Initialize in current folder
+git init myproject          # Create folder + initialize
+ls -la .git                 # Explore .git structure
+cat .git/HEAD               # See what HEAD points to
+```
+
+### Important Points
+- `.git` appears after `git init`
+- No branches exist until first commit
+- `objects/` is empty until you commit
+- Delete `.git` = lose all Git history
+
+---
+
+## Question 05: Default Branch
+
+### What It Is
+The branch automatically created when you run `git init`
+
+### Common Defaults
+- **Old default:** `master`
+- **Modern default:** `main`
+- **Custom:** Whatever you configure
+
+### Key Commands
+```bash
+# Check current default
+git config --global init.defaultBranch
+
+# Set global default to 'main'
+git config --global init.defaultBranch main
+
+# Rename current branch
+git branch -m new-name
+
+# Rename specific branch
+git branch -m old-name new-name
+```
+
+### Configuration Levels
+```bash
+# Local (this repo only) - Highest priority
+git config --local init.defaultBranch main
+
+# Global (your user) - Medium priority
+git config --global init.defaultBranch main
+
+# System (all users) - Lowest priority
+git config --system init.defaultBranch main
+```
+
+### Important Points
+- Changing default only affects NEW repos
+- Existing repos keep their current branches
+- Branch names are just labels (you can use any name)
+- When cloning, you get the remote's default (not yours)
+
+---
+
+## Question 06: Purpose of .git Directory
+
+### What Is .git?
+**The `.git` directory IS the repository.** Everything else is just working files.
+
+### Structure
+```
+.git/
+├── HEAD              # Current branch pointer
+├── config            # Repository configuration
+├── index             # Staging area (after git add)
+├── objects/          # THE DATABASE - all commits, files, history
+│   ├── XX/           # Object storage (by hash)
+│   └── pack/         # Compressed objects
+├── refs/             # References
+│   ├── heads/        # Local branches
+│   └── tags/         # Tags
+├── hooks/            # Automation scripts (.sample files)
+└── info/
+    └── exclude       # Like .gitignore but local
+```
+
+### Object Types
+Git stores 3 main object types in `objects/`:
+1. **Blob** - File contents
+2. **Tree** - Directory structure  
+3. **Commit** - Snapshot + metadata
+
+### Key Commands
+```bash
+# Explore .git
+ls -la .git
+cat .git/HEAD
+cat .git/config
+
+# Count objects
+find .git/objects -type f | wc -l
+
+# Examine an object
+git cat-file -t <hash>    # Show type
+git cat-file -p <hash>    # Show content
+
+# Show all Git files
+find .git -type f
+```
+
+### Critical Facts
+- `.git` contains ALL your repository data
+- Working files are separate (just copies from `.git`)
+- Delete `.git` = lose ALL history (irreversible!)
+- Backup `.git` = backup entire repository
+- Moving project folder = fine (`.git` moves with it)
+
+### Working Directory vs Repository
+```
+Project Folder
+├── .git/          ← REPOSITORY (the actual Git database)
+│   └── objects/   ← All commits, all versions, all history
+└── file.txt       ← WORKING FILE (current checkout from .git)
+```
 
 ---
 
